@@ -5,6 +5,6 @@
     * ld
     * make
 # How install:
-    Enter project directory and run `make`
+Enter project directory and run `make`
 # Issues:
-    If you found any issues, contact me via Github: "ScriptScorpion"
+If you found any issues, contact me via Github: "ScriptScorpion"
