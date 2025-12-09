@@ -20,6 +20,8 @@
 #define And 5
 #define Or 6
 #define Xor 7
+#define LeftShift 8
+#define RightShift 9
 
 #define EQ 0
 #define NEQ 1
@@ -498,6 +500,74 @@ bool Tokenize(const std::unique_ptr <char[]> &buffer, std::string &nasm_vars, st
                                             Variables.Change_value(words[0], std::to_string(std::stoull(Variables.Get_value(words[0])) ^ std::stoull(words[2])));
                                             return true;
                                         }
+                                        case HashFunc(AssignOP[LeftShift]): {
+                                            switch (Variables.Get_size(words[0])) {
+                                                case 'b': {
+                                                    nasm_cmds += "\tmov al, [rel " + words[0] + "]\n";
+                                                    nasm_cmds += "\tshl al, " + words[2] + "\n";
+                                                    nasm_cmds += "\tmov [rel " + words[0] + "], al\n";
+                                                    Variables.Change_value(words[0], std::to_string(std::stoull(Variables.Get_value(words[0])) << std::stoull(words[2])));
+                                                    break;
+                                                }
+                                                case 'w': {
+                                                    nasm_cmds += "\tmov ah, [rel " + words[0] + "]\n";
+                                                    nasm_cmds += "\tshl ah, " + words[2] + "\n";
+                                                    nasm_cmds += "\tmov [rel " + words[0] + "], ah\n";
+                                                    Variables.Change_value(words[0], std::to_string(std::stoull(Variables.Get_value(words[0])) << std::stoull(words[2])));
+                                                    break;
+                                                }
+                                                case 'd': {
+                                                    nasm_cmds += "\tmov eax, [rel " + words[0] + "]\n";
+                                                    nasm_cmds += "\tshl eax, " + words[2] + "\n";
+                                                    nasm_cmds += "\tmov [rel " + words[0] + "], eax\n";
+                                                    Variables.Change_value(words[0], std::to_string(std::stoull(Variables.Get_value(words[0])) << std::stoull(words[2])));
+                                                    break;
+                                                }
+                                                case 'q': {
+                                                    nasm_cmds += "\tmov rax, [rel " + words[0] + "]\n";
+                                                    nasm_cmds += "\tshl rax, " + words[2] + "\n";
+                                                    nasm_cmds += "\tmov [rel " + words[0] + "], rax\n";
+                                                    Variables.Change_value(words[0], std::to_string(std::stoull(Variables.Get_value(words[0])) << std::stoull(words[2])));
+                                                    break;
+                                                }
+                                                    
+                                            }
+                                            return true;
+                                        }
+                                        case HashFunc(AssignOP[RightShift]): {
+                                            switch (Variables.Get_size(words[0])) {
+                                                case 'b': {
+                                                    nasm_cmds += "\tmov al, [rel " + words[0] + "]\n";
+                                                    nasm_cmds += "\tshr al, " + words[2] + "\n";
+                                                    nasm_cmds += "\tmov [rel " + words[0] + "], al\n";
+                                                    Variables.Change_value(words[0], std::to_string(std::stoull(Variables.Get_value(words[0])) >> std::stoull(words[2])));
+                                                    break;
+                                                }
+                                                case 'w': {
+                                                    nasm_cmds += "\tmov ah, [rel " + words[0] + "]\n";
+                                                    nasm_cmds += "\tshr ah, " + words[2] + "\n";
+                                                    nasm_cmds += "\tmov [rel " + words[0] + "], ah\n";
+                                                    Variables.Change_value(words[0], std::to_string(std::stoull(Variables.Get_value(words[0])) >> std::stoull(words[2])));
+                                                    break;
+                                                }
+                                                case 'd': {
+                                                    nasm_cmds += "\tmov eax, [rel " + words[0] + "]\n";
+                                                    nasm_cmds += "\tshr eax, " + words[2] + "\n";
+                                                    nasm_cmds += "\tmov [rel " + words[0] + "], eax\n";
+                                                    Variables.Change_value(words[0], std::to_string(std::stoull(Variables.Get_value(words[0])) >> std::stoull(words[2])));
+                                                    break;
+                                                }
+                                                case 'q': {
+                                                    nasm_cmds += "\tmov rax, [rel " + words[0] + "]\n";
+                                                    nasm_cmds += "\tshr rax, " + words[2] + "\n";
+                                                    nasm_cmds += "\tmov [rel " + words[0] + "], rax\n";
+                                                    Variables.Change_value(words[0], std::to_string(std::stoull(Variables.Get_value(words[0])) >> std::stoull(words[2])));
+                                                    break;
+                                                }
+                                                    
+                                            }
+                                            return true;
+                                        }
                                         default: {
                                             ManualReport.ErrorID = 1;
                                             ManualReport.Message = "Invalid operator: " + words[1];
@@ -599,6 +669,34 @@ bool Tokenize(const std::unique_ptr <char[]> &buffer, std::string &nasm_vars, st
                                             nasm_cmds += "\txor rax, rbx\n";
                                             nasm_cmds += "\tmov [rel " + words[0] + "], rax\n"; 
                                             Variables.Change_value(words[0], std::to_string(std::stoull(Variables.Get_value(words[0])) ^ std::stoull(Variables.Get_value(words[2]))));
+                                            return true;
+                                        }
+                                        case HashFunc(AssignOP[LeftShift]): {
+                                            if (Variables.Get_size(words[0]) != 'b' || Variables.Get_size(words[2]) != 'b') {
+                                                ManualReport.ErrorID = 1;
+                                                ManualReport.Message = "Unfortunately, you cannot bit shift on non-byte integer variable";
+                                                ManualReport.PrintError(ManualReport);
+                                                return false;
+                                            }
+                                            nasm_cmds += "\tmov al, [rel " + words[0] + "]\n";
+                                            nasm_cmds += "\tmov cl, [rel " + words[2] + "]\n";
+                                            nasm_cmds += "\tshl al, cl\n";
+                                            nasm_cmds += "\tmov [rel " + words[0] + "], al\n";
+                                            Variables.Change_value(words[0], std::to_string(std::stoull(Variables.Get_value(words[0])) << std::stoull(Variables.Get_value(words[2]))));
+                                            return true;
+                                        }
+                                        case HashFunc(AssignOP[RightShift]): {
+                                            if (Variables.Get_size(words[0]) != 'b' || Variables.Get_size(words[2]) != 'b') {
+                                                ManualReport.ErrorID = 1;
+                                                ManualReport.Message = "Unfortunately, you cannot bit shift on non-byte integer variable";
+                                                ManualReport.PrintError(ManualReport);
+                                                return false;
+                                            }
+                                            nasm_cmds += "\tmov al, [rel " + words[0] + "]\n";
+                                            nasm_cmds += "\tmov cl, [rel " + words[2] + "]\n";
+                                            nasm_cmds += "\tshr al, cl\n";
+                                            nasm_cmds += "\tmov [rel " + words[0] + "], al\n";
+                                            Variables.Change_value(words[0], std::to_string(std::stoull(Variables.Get_value(words[0])) >> std::stoull(Variables.Get_value(words[2]))));
                                             return true;
                                         }
                                         default: {
@@ -815,6 +913,16 @@ bool Tokenize(const std::unique_ptr <char[]> &buffer, std::string &nasm_vars, st
                                                             isfirst = false;
                                                             break;
                                                         }
+                                                        case HashFunc(Operator[LeftShift]): {
+                                                            counter = std::stoi(words[j-1]) << std::stoi(words[j+1]);
+                                                            isfirst = false;
+                                                            break;
+                                                        }
+                                                        case HashFunc(Operator[RightShift]): {
+                                                            counter = std::stoi(words[j-1]) >> std::stoi(words[j+1]);
+                                                            isfirst = false;
+                                                            break;
+                                                        }
                                                         default: {
                                                             ManualReport.ErrorID = 1;
                                                             ManualReport.Message = "Incorrect operation with integer variable";
@@ -857,6 +965,14 @@ bool Tokenize(const std::unique_ptr <char[]> &buffer, std::string &nasm_vars, st
                                                         }
                                                         case HashFunc(Operator[Xor]): {
                                                             counter ^= std::stoi(words[j+1]);
+                                                            break;
+                                                        }
+                                                        case HashFunc(Operator[LeftShift]): {
+                                                            counter <<= std::stoi(words[j+1]);
+                                                            break;
+                                                        }
+                                                        case HashFunc(Operator[RightShift]): {
+                                                            counter >>= std::stoi(words[j+1]);
                                                             break;
                                                         }
                                                         default: {
@@ -965,6 +1081,16 @@ bool Tokenize(const std::unique_ptr <char[]> &buffer, std::string &nasm_vars, st
                                                             isfirst = false;
                                                             break;
                                                         }
+                                                        case HashFunc(Operator[LeftShift]): {
+                                                            counter = std::stoi(words[j-1]) << std::stoi(words[j+1]);
+                                                            isfirst = false;
+                                                            break;
+                                                        }
+                                                        case HashFunc(Operator[RightShift]): {
+                                                            counter = std::stoi(words[j-1]) >> std::stoi(words[j+1]);
+                                                            isfirst = false;
+                                                            break;
+                                                        }
                                                         default: {
                                                             ManualReport.ErrorID = 1;
                                                             ManualReport.Message = "Incorrect operation with integer variable";
@@ -1007,6 +1133,14 @@ bool Tokenize(const std::unique_ptr <char[]> &buffer, std::string &nasm_vars, st
                                                         }
                                                         case HashFunc(Operator[Xor]): {
                                                             counter ^= std::stoi(words[j+1]);
+                                                            break;
+                                                        }
+                                                        case HashFunc(Operator[LeftShift]): {
+                                                            counter <<= std::stoi(words[j+1]);
+                                                            break;
+                                                        }
+                                                        case HashFunc(Operator[RightShift]): {
+                                                            counter >>= std::stoi(words[j+1]);
                                                             break;
                                                         }
                                                         default: {
@@ -1115,6 +1249,16 @@ bool Tokenize(const std::unique_ptr <char[]> &buffer, std::string &nasm_vars, st
                                                             isfirst = false;
                                                             break;
                                                         }
+                                                        case HashFunc(Operator[LeftShift]): {
+                                                            counter = std::stoi(words[j-1]) << std::stoi(words[j+1]);
+                                                            isfirst = false;
+                                                            break;
+                                                        }
+                                                        case HashFunc(Operator[RightShift]): {
+                                                            counter = std::stoi(words[j-1]) >> std::stoi(words[j+1]);
+                                                            isfirst = false;
+                                                            break;
+                                                        }
                                                         default: {
                                                             ManualReport.ErrorID = 1;
                                                             ManualReport.Message = "Incorrect operation with integer variable";
@@ -1157,6 +1301,14 @@ bool Tokenize(const std::unique_ptr <char[]> &buffer, std::string &nasm_vars, st
                                                         }
                                                         case HashFunc(Operator[Xor]): {
                                                             counter ^= std::stoi(words[j+1]);
+                                                            break;
+                                                        }
+                                                        case HashFunc(Operator[LeftShift]): {
+                                                            counter <<= std::stoi(words[j+1]);
+                                                            break;
+                                                        }
+                                                        case HashFunc(Operator[RightShift]): {
+                                                            counter >>= std::stoi(words[j+1]);
                                                             break;
                                                         }
                                                         default: {
@@ -1265,6 +1417,16 @@ bool Tokenize(const std::unique_ptr <char[]> &buffer, std::string &nasm_vars, st
                                                             isfirst = false;
                                                             break;
                                                         }
+                                                        case HashFunc(Operator[LeftShift]): {
+                                                            counter = std::stoi(words[j-1]) << std::stoi(words[j+1]);
+                                                            isfirst = false;
+                                                            break;
+                                                        }
+                                                        case HashFunc(Operator[RightShift]): {
+                                                            counter = std::stoi(words[j-1]) >> std::stoi(words[j+1]);
+                                                            isfirst = false;
+                                                            break;
+                                                        }
                                                         default: {
                                                             ManualReport.ErrorID = 1;
                                                             ManualReport.Message = "Incorrect operation with integer variable";
@@ -1307,6 +1469,14 @@ bool Tokenize(const std::unique_ptr <char[]> &buffer, std::string &nasm_vars, st
                                                         }
                                                         case HashFunc(Operator[Xor]): {
                                                             counter ^= std::stoi(words[j+1]);
+                                                            break;
+                                                        }
+                                                        case HashFunc(Operator[LeftShift]): {
+                                                            counter <<= std::stoi(words[j+1]);
+                                                            break;
+                                                        }
+                                                        case HashFunc(Operator[RightShift]): {
+                                                            counter >>= std::stoi(words[j+1]);
                                                             break;
                                                         }
                                                         default: {
