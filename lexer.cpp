@@ -161,7 +161,7 @@ bool SplitIntoWords(const std::string &sentence, std::vector <std::string> &word
     std::string word {};
     for (size_t i = 0; i <= sentence.length(); ++i) { // looking a little bit further to determine end of the string
         if ((std::isspace(sentence[i]) || sentence[i] == '\0') && !word.empty()) {
-            if (std::isblank(sentence[i]) && (i + 1 <= sentence.length()) && std::isblank(sentence[i+1])) {
+            if (std::isblank(sentence[i]) && (i + 1 < sentence.length()) && std::isblank(sentence[i+1])) {
                 ManualReport.ErrorID = 1;
                 ManualReport.Message = "Cannot have more then 1 space";
                 ManualReport.PrintError(ManualReport);
@@ -231,7 +231,7 @@ bool IsCorrectArguments(const std::string &arguments) noexcept {
     std::vector <std::string> vars {};
     std::string word {};
     for (size_t i = 0; i < arguments.length(); ++i) {
-        if (arguments[i] == ',' && std::isblank(arguments[i+1]) && i+1 <= arguments.length()) {
+        if (arguments[i] == ',' && std::isblank(arguments[i+1]) && i+1 < arguments.length()) {
             vars.push_back(word);
             word.assign(word.length(), '\0');
             word.clear();
@@ -274,9 +274,9 @@ bool FindStart(std::unique_ptr <char[]> &buffer) {
     size_t first_pos {0}; 
     size_t last_pos {0}; 
     for (size_t i = 0; buffer[i] != '\0'; ++i) {
-        if (buffer[i] == '(' && (i+1 <= strlen(buffer.get())) && found_pars == false) {
+        if (buffer[i] == '(' && (i+1 < strlen(buffer.get())) && found_pars == false) {
             for (size_t j = 0; j < fun_name.length(); ++j) {
-                if (std::isblank(fun_name[j]) && std::isalnum(fun_name[j+1]) && j+1 <= fun_name.length()) {
+                if (std::isblank(fun_name[j]) && std::isalnum(fun_name[j+1]) && j+1 < fun_name.length()) {
                     wrong_place = true;
                     break;
                 }
@@ -871,7 +871,7 @@ bool Tokenize(const std::unique_ptr <char[]> &buffer, std::string &nasm_vars, st
                                         isfirst = true;
                                         for (size_t j = 3; j < words.size() - 1; ++j) { // -1 needed cuz of we go out the scope if we do so
                                             if (isfirst) {
-                                                if (IsDigit(words[j-1]) && IsDigit(words[j+1]) && (j+1 <= words.size())) {
+                                                if (IsDigit(words[j-1]) && IsDigit(words[j+1]) && (j+1 < words.size())) {
                                                     switch (HashFunc(words[j].c_str())) {
                                                         case HashFunc(Operator[Addition]): {
                                                             counter = std::stoi(words[j-1]) + std::stoi(words[j+1]);
@@ -933,7 +933,7 @@ bool Tokenize(const std::unique_ptr <char[]> &buffer, std::string &nasm_vars, st
                                                 }
                                             }
                                             else  {
-                                                if (IsDigit(words[j+1]) && (j+1 <= words.size())) {
+                                                if (IsDigit(words[j+1]) && (j+1 < words.size())) {
                                                     switch (HashFunc(words[j].c_str())) {
                                                         case HashFunc(Operator[Addition]): {
                                                             counter += std::stoi(words[j+1]);
@@ -1039,7 +1039,7 @@ bool Tokenize(const std::unique_ptr <char[]> &buffer, std::string &nasm_vars, st
                                         isfirst = true;
                                         for (size_t j = 3; j < words.size() - 1; ++j) {
                                             if (isfirst) {
-                                                if (IsDigit(words[j-1]) && IsDigit(words[j+1]) && (j+1 <= words.size())) {
+                                                if (IsDigit(words[j-1]) && IsDigit(words[j+1]) && (j+1 < words.size())) {
                                                     switch (HashFunc(words[j].c_str())) {
                                                         case HashFunc(Operator[Addition]): {
                                                             counter = std::stoi(words[j-1]) + std::stoi(words[j+1]);
@@ -1101,7 +1101,7 @@ bool Tokenize(const std::unique_ptr <char[]> &buffer, std::string &nasm_vars, st
                                                 }
                                             }
                                             else  {
-                                                if (IsDigit(words[j+1]) && (j+1 <= words.size())) {
+                                                if (IsDigit(words[j+1]) && (j+1 < words.size())) {
                                                     switch (HashFunc(words[j].c_str())) {
                                                         case HashFunc(Operator[Addition]): {
                                                             counter += std::stoi(words[j+1]);
@@ -1207,7 +1207,7 @@ bool Tokenize(const std::unique_ptr <char[]> &buffer, std::string &nasm_vars, st
                                         isfirst = true;
                                         for (size_t j = 3; j < words.size() - 1; ++j) {
                                             if (isfirst) {
-                                                if (IsDigit(words[j-1]) && IsDigit(words[j+1]) && (j+1 <= words.size())) {
+                                                if (IsDigit(words[j-1]) && IsDigit(words[j+1]) && (j+1 < words.size())) {
                                                     switch (HashFunc(words[j].c_str())) {
                                                         case HashFunc(Operator[Addition]): {
                                                             counter = std::stoi(words[j-1]) + std::stoi(words[j+1]);
@@ -1269,7 +1269,7 @@ bool Tokenize(const std::unique_ptr <char[]> &buffer, std::string &nasm_vars, st
                                                 }
                                             }
                                             else  {
-                                                if (IsDigit(words[j+1]) && (j+1 <= words.size())) {
+                                                if (IsDigit(words[j+1]) && (j+1 < words.size())) {
                                                     switch (HashFunc(words[j].c_str())) {
                                                         case HashFunc(Operator[Addition]): {
                                                             counter += std::stoi(words[j+1]);
@@ -1375,7 +1375,7 @@ bool Tokenize(const std::unique_ptr <char[]> &buffer, std::string &nasm_vars, st
                                         isfirst = true;
                                         for (size_t j = 3; j < words.size() - 1; ++j) {
                                             if (isfirst) {
-                                                if (IsDigit(words[j-1]) && IsDigit(words[j+1]) && (j+1 <= words.size())) {
+                                                if (IsDigit(words[j-1]) && IsDigit(words[j+1]) && (j+1 < words.size())) {
                                                     switch (HashFunc(words[j].c_str())) {
                                                         case HashFunc(Operator[Addition]): {
                                                             counter = std::stoi(words[j-1]) + std::stoi(words[j+1]);
@@ -1437,7 +1437,7 @@ bool Tokenize(const std::unique_ptr <char[]> &buffer, std::string &nasm_vars, st
                                                 }
                                             }
                                             else  {
-                                                if (IsDigit(words[j+1]) && (j+1 <= words.size())) {
+                                                if (IsDigit(words[j+1]) && (j+1 < words.size())) {
                                                     switch (HashFunc(words[j].c_str())) {
                                                         case HashFunc(Operator[Addition]): {
                                                             counter += std::stoi(words[j+1]);
