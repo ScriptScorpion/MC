@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.2" viewBox="0 0 128 128" width="64" height="64">
+	<style>
+		tspan { white-space:pre } 
+		.s0 { fill: #f6f5f4 } 
+		.s1 { fill: #deddda } 
+		.s2 { fill: #808080 } 
+		.t3 { font-size: 29px;fill: #480505;font-weight: 700;font-family: "DejaVuSans-Bold", "DejaVu Sans" } 
+	</style>
+	<path class="s0" d="m28 8h50l30.04 29.92v74.06c0 4.43-3.61 8.02-8.04 8.02h-72c-4.43 0-8-3.57-8-8v-96c0-4.43 3.57-8 8-8z"/>
+	<path class="s1" d="m78 8v22c0 4.43 3.61 7.92 8.04 7.92h22z"/>
+	<path id="Shape 1" fill-rule="evenodd" class="s2" d="m103.11 68.45l-40.09 37.65-39.02-41.55 40.09-37.65z"/>
+	<text id="MC" style="transform: matrix(1,0,0,1,37.25,75)">
+		<tspan x="0" y="0" class="t3">M</tspan><tspan y="0" class="t3">C</tspan><tspan y="0" class="t3">
+</tspan>
+	</text>
+</svg>
