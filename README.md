@@ -1,4 +1,4 @@
-### **MC(Minimal C)** - is Fast programming language which directly converts into NASM Assembly language
+### **MC (Minimal C)** - is Fast programming language which directly converts into NASM Assembly language
 ## Requirements:
  * nasm
  * g++
