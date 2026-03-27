@@ -2,7 +2,7 @@
 extern "C" {
 #include <stdio.h>
 }
-#include "errors.h" // string types are not needed in this file
+#include "errors.h"
 #include "error_codes.h"
 void ErrorType::NoInput() noexcept {
      printf("%s No input file found (add -h flag for help)\n", ErrorCode[0]);
