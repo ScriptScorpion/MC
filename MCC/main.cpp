@@ -1,14 +1,7 @@
-// by default it will output compiled code to the terminal 
-// will be crossplatform
 #include <fstream>
 #include <cstring>
 #include <iostream>
 #include "parser.h"
-#ifdef __unix__
-    const bool is_unix = true;
-#else
-    const bool is_unix = false;
-#endif
 
 int main(int argc, char *argv[]) {
     if (argc <= 1 || argc > 7) {
