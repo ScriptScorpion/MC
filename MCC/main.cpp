@@ -5,11 +5,11 @@
 
 int main(int argc, char *argv[]) {
     if (argc <= 1 || argc > 7) {
-        std::cout << "Usage: " << argv[0] << " <Options> <File>\n";
+        std::cout << "Usage: " << argv[0] << " <Options>\n";
         std::cout << "Options:\n" << 
-        "-a number: Specify for what architecture of CPU the code is written for\n"
+        "-a (x64 or x32): Specify for what architecture of CPU the code is written for\n"
         "-i string: Specify input filename to read from\n"
-        "-o string: Specify filename to write output into (default output is to screen)\n";
+        "-o string: Specify filename to write output into (default output file is OUT_NAME in parser.cpp )\n";
         return 0;
     }
     Parser parser;

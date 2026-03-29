@@ -10,7 +10,7 @@
 
 const std::string TEMP_NAME = "mcc_f.bin";
 const std::string TEMP_NAME2 = "mcc_f.o";
-std::string OUT_NAME = "mcc_f";
+std::string OUT_NAME = "mcc_f"; // you can change this one
 
 bool Parser::correct_filename(const std::string &str) {
     if (str.empty()) {
