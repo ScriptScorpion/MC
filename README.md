@@ -4,7 +4,9 @@
  * g++
  * ld
  * make
-## How install:
+
+## Installation:
 Enter project directory and run `make`
+
 ## Issues:
 If you found any issues, create [new issue](https://github.com/ScriptScorpion/MC/issues/new) on Github page 
